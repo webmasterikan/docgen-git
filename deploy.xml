@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="docgen_deploy" default="deployActions" basedir=".">
+	<!--TOMCAT_HOME and tomcat manager properties in alm_ant.properties-->
+	<property file="alm_ant.properties" />
+	<property name="app.path" value="/docgen" />
+	<property name="tomcat.home" value="${target}" />
+	<condition property="isRollBack">
+		<equals arg1="${alm.levelRequest.actionType}" arg2="Rollback Build" trim="true" />
+	</condition>
+
+	<!-- Tomcat reload taskdef -->
+	<taskdef name="reload"  classname="org.apache.catalina.ant.ReloadTask">
+		<classpath>
+			<!--catalina-ant.jar is in TOMCAT_HOME-->
+			<pathelement path="${tomcat.home}/lib/catalina-ant.jar" />
+			<pathelement path="${tomcat.home}/lib/tomcat-coyote.jar" />
+			<pathelement path="${tomcat.home}/lib/tomcat-util.jar" />
+			<pathelement path="${tomcat.home}/bin/tomcat-juli.jar" />
+		</classpath>
+	</taskdef>
+
+	<!-- *****************************************************************-->
+	<!-- Run deploy script for test level                                 -->
+	<!-- Copy the war file to Tomcat web browser                          -->
+	<!--                                                                  -->
+	<!--  Note: the base directory of the Tomcat webserver                -->
+	<!-- is given as target location of the deployEnvironment of          -->
+	<!-- the production level. Also change username                       -->
+	<!-- and password of manager if needed.                               -->
+	<!-- *****************************************************************-->
+	<target name="deployActions" depends="startRollBack,deploy" description="deploy of testLevel" />
+
+	<target name="startRollBack" if="isRollBack" description="Set war as newest version">
+		<echo message="ROLLING BACK TO OLDER VERSION" />
+		<property name="trb.dir" value="${source}/temprollback" />
+		<mkdir dir="${trb.dir}" />
+		<echo message="TEMPORARY DIRECTORY CREATED: ${trb.dir}" />
+		<unwar src="${source}/docgen.war" dest="${trb.dir}" />
+		<delete dir="${source}/docgen.war" />
+		<touch>
+			<fileset dir="${trb.dir}" includes="**/*.html" />
+		</touch>
+		<war destfile="${source}/docgen.war" webxml="${trb.dir}/WEB-INF/web.xml">
+			<fileset dir="${trb.dir}" excludes="**/web.xml, **/MANIFEST.MF" />
+		</war>
+		<delete dir="${trb.dir}" />
+		<echo message="SUCCESFULLY ROLLED BACK" />
+	</target>
+
+	<target name="deploy" description="deploys the web application to tomcat webserver">
+	    <echo>
+             For deploying to the webserver, following assumption were made:
+             - Tomcat is running
+			 - The war created on the build level will be copied to ${tomcat.home}/webapps
+             - The manager console of Tomcat can be reached with username="${tomcat.manager.username}" 
+			 and password provided by property tomcat.manager.password
+			 This can be checked in the file: ${tomcat.home}/conf/tomcat-users.xml
+             If username and/or password are not correct, change the values of the 
+             deployparameters in alm, defined for the deployEnvironment of 
+             the Test Level:  "tomcat.manager.username", "tomcat.manager.password".
+         </echo>
+		<copy file="${source}/docgen.war" todir="${tomcat.home}/webapps" overwrite="true" />
+		<!--        <copy file="${source}/war/WEB-INF/context.xml" tofile="${target}/conf/Catalina/localhost/docgen.xml"/>-->
+		<sleep seconds="10" />
+		<reload url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}" path="${app.path}" />
+		<echo>
+             The demo is deployed succesfully. You can verify the demo application by
+             using the browser address :    http://tomcat_host:tomcat_port${app.path}
+			 Sample: http://localhost:8080${app.path}
+        </echo>
+	</target>
+
+</project>

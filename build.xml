@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="dogen_build_level" default="all" basedir=".">
+
+	<!-- **************************************************-->
+	<!--  taskdef:  Define docbooktask and                 -->
+	<!--   set ant4docbook jar in classpath                -->
+	<!-- **************************************************-->
+    <taskdef name="dbk" classname="net.sourceforge.ant4docbook.taskdefs.DocbookTask"
+	                    classpath="${basedir}/lib/ant4docbook-0.5.0.jar"/>
+    <property name="source" value="${basedir}"/>
+	<property name="target" value="${basedir}/target"/>
+	
+
+	<!-- ******************************* -->
+	<!-- Generate HTML                   -->
+	<!-- ********************************-->
+	<target name="generate_html" description="generate html example">
+		<dbk file="${source}/docbook.xml" tofile="${source}/index.html"/>
+	</target>
+
+	<!-- ******************************* -->
+	<!-- Generate pdf                    -->
+	<!-- ********************************-->
+	<target name="generate_pdf" description="generate entity example">
+		<dbk file="${source}/docbook.xml" tofile="${source}/docbook.pdf" />
+	</target>
+
+	<!-- ************************************************************** -->
+	<!-- Copy pdf and html +css from the source to the target location  -->
+    <!-- deploy.xml must also be copied, since TST Level does not exist -->
+	<!-- it is created after the build is executed                      -->
+	<!-- ************************************************************** -->
+	<target name="copySourceToTarget" description="copy generated doc to target location">
+		<echo message="copy to sourceroot = ${target}" />
+		<mkdir dir="${target}"/>
+		<copy todir="${target}" includeEmptyDirs="true">
+		    <fileset file="${source}/deploy.xml"/>
+			<fileset dir="${source}" includes="css/,*.html,*.pdf"/>
+		</copy>
+	</target>
+
+	<!-- ************************************************************** -->
+	<!--Generate war in target dir, so that it may be deployed          -->
+	<!-- ************************************************************** -->
+	<!-- TODO: index.html css ref contains \ and is not taken into account on tomcat -->
+	<target name="generateWar" description="Generate resulting war">
+	    <war destfile="${target}/docgen.war" webxml="${source}/webapp/WEB-INF/web.xml">
+            <fileset dir="${source}" includes="css/,*.html,*.pdf" />
+         </war>
+	</target>
+
+	<target name="all" depends="generate_html,generate_pdf,copySourceToTarget,generateWar">
+	</target>
+
+</project>

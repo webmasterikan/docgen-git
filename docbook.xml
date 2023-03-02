@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<article xml:lang="en" xmlns:xi="http://www.w3.org/2001/XInclude">
+
+	<title>Docbook article as an IKAN ALM showcase</title>
+	<section id="section1">
+		<title>Phases</title>
+		<para>
+		When IKAN ALM is running Level Requests, Builds and Deploys, all actions are performed by executing a sequence of Phases. Those Phases are defined in the IKAN ALM database and can be consulted and manipulated in the Phases section of the Global Administration interface. Once they have been defined in Global Administration, Phases may be linked to Levels, Build or Deploy Environments in the Project Administration context.</para>
+
+		<para>
+		The IKAN ALM core functionality is performed by so-called "Core" Phases. Those Core Phases can only be viewed, and cannot be altered nor deleted. Consider them an integral part of IKAN ALM.</para>
+
+		<para>You can extend this core functionality by creating your own Phases. There are two options:</para>
+
+	<orderedlist numeration = "arabic">
+		<listitem>
+			<para>Create a Phase from scratch using the "Create Phase" functionality. In that case, you first specify the name and the version of the Phase, and, next, you choose the script or scripts to be executed by the Phase.
+			</para>
+		</listitem>
+		<listitem>
+			<para>Import a Phase that has already been created via the "Import Phase" functionality.
+			</para>
+		</listitem>
+	</orderedlist>
+	</section>
+
+		
+	<section id="section2">
+		<title>Creating a Phase Definition</title>
+		<para>1. Select <emphasis>Global Administration > Phases > Create</emphasis>.</para>
+
+		<para>2. Fill out the fields in the <emphasis>Create Phase</emphasis> panel at the top of the screen. Fields marked with a red asterisk are mandatory:</para>
+
+<table xml:id="t.removed">
+<title>Available Fields</title>
+<tgroup cols="2">
+<thead>
+<row>
+<entry>Field</entry>
+<entry>Meaning</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>Name</entry>
+<entry>The name of the Phase.
+This must be a unique name so choose it carefully. A good practice is to use a "reverse DNS" notation, like for example: "com.mycompany.phases.ant.deployToTomcat". </entry>
+</row>
+<row>
+<entry>Version</entry>
+<entry>The version of the Phase. Together with the Phase name, this field forms the unique identifier of the Phase. As a result, there can only be one Phase defined with a certain name and version..</entry>
+</row>
+<row>
+<entry>Default Display Name</entry>
+<entry>The name of the Phase as it will be displayed in the IKAN ALM user interface, e.g. on the Level Request Detailed Overview screen or on the Build Environment Phases Overview screen.
+This default name will be used when no language-specific display name is provided.This field is mandatory..</entry>
+</row>
+<row>
+<entry>Display Name [English]</entry>
+<entry>The English name of the Phase as it will be displayed in the IKAN ALM user interface for a User whose language is set to English in his or her Personal Settings. This field is optional.</entry>
+</row>
+<row>
+<entry>Display Name [French]</entry>
+<entry>The French name of the Phase as it will be displayed in the IKAN ALM user interface for a User whose language is set to French in his or her Personal Settings. This field is optional.</entry>
+</row>
+<row>
+<entry>Display Name [German]</entry>
+<entry>The German name of the Phase as it will be displayed in the IKAN ALM interface for a User whose language is set to German in his or her Personal Settings. This field is optional.</entry>
+</row>
+<row>
+<entry>Description</entry>
+<entry>The description for the new Phase.
+This field is optional.</entry>
+</row>
+<row>
+<entry>Author</entry>
+<entry>The author of the Phase.
+For example, the name of the User creating the Phase or the company he is working for.
+This field can be useful when searching for Phases.
+This field is optional.</entry>
+</row>
+<row>
+<entry>Execution Type</entry>
+<entry>The author of the Phase.
+Select the Scripting Tool type that will be used to execute the scripts that are contained in this Phase. This field is mandatory and cannot be changed after the creation of the Phase.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+
+<para>3. Once you have filled out the above mentioned fields, you need to upload the script file(s).
+Click the <emphasis>Upload</emphasis> button.
+A file selection window will open.</para>
+
+<para>4. Select the scripts that will be used to execute the Phase. You can select only one file. When the upload has succeeded, a  message is displayed.</para>
+
+<para>5. Select the main script.
+As the message suggests, you must now select the "main" script in the list of uploaded files. This is the script that will actually be called when the Phase is executed.
+When the upload has succeeded and the main script is selected, the <emphasis>Create</emphasis> and <emphasis>Reset</emphasis> buttons will become available.</para>
+
+<para>6. Indicate where the Phase can be used: on a Level, a Build Environment or a Deploy Environment.</para>
+
+<para>7. Click <emphasis>Create</emphasis> to create the Phase.
+When clicking the <emphasis>Create</emphasis> button, the Phase is created in the Phase Catalog and added to the Phases Overview panel. You can also click <emphasis>Reset</emphasis> to clear the fields and restore its initial values.</para>
+
+	</section>
+
+	<section id="section3">
+		<title>More information</title>
+		<para>For more information on using and developing Phases, 
+		refer to the chapter <emphasis>Phases</emphasis> in the <emphasis>IKAN ALM User Guide</emphasis> or contact your IKAN ALM vendor.</para>
+	</section>
+
+</article>  	
